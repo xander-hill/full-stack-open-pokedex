@@ -22,12 +22,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: get commit messages
+        if: ${{ github.event_name == 'pull_request' }}
         id: get_commits
         run: |
           commits=$(git log --format=%B -n 10)
           echo "commits=$commits" >> $GITHUB_ENV
       - name: Skip deployment if
-        if: contains(env.commits, '#skip')
+        if: ${{ github.event_name == 'pull_request' && contains(env.commits, '#skip') }}
         run: |
           echo "skipping deployment since #skip found in commit message"
           exit 0 
