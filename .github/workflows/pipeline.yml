@@ -38,6 +38,13 @@ jobs:
         run: npm run eslint
       - name: Make production build
         run: npm run build
+      - name: Build Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          details: Build Failed!
+          webhookUrl: ${{ secrets.DISCORD_WEB_HOOK }}
       - name: Test code
         run: npm run test
       - name: Trigger deployment
@@ -60,6 +67,13 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
         DEFAULT_BUMP: patch
+    - name: New version deployed
+      uses: rjstone/discord-webhook-notify@v1
+      if: success()
+      with:
+        severity: info
+        details: New version deployed
+        webhookUrl: ${{ secrets.DISCORD_WEB_HOOK }}
         
       
       
